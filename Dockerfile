@@ -3,29 +3,26 @@
 # ---------------------------------------
 FROM node:20-alpine AS base
 
-# Install specific system dependencies required for some native modules
+# Install specific system dependencies
 RUN apk add --no-cache libc6-compat openssl
 
 WORKDIR /app
 
-# Copy package definitions first to leverage Docker cache
+# Copy package definitions
 COPY package*.json ./
-COPY prisma ./prisma/
 
 # ---------------------------------------
 # Stage 2: Development (Local Dev)
 # ---------------------------------------
 FROM base AS development
 
-# Install ALL dependencies (including devDependencies)
+# Install ALL dependencies
 RUN npm install
 
-# Generate Prisma Client
-RUN npx prisma generate
+# Note: No 'npx prisma generate' needed anymore!
 
 COPY . .
 
-# We don't build here; we run via command in docker-compose
 CMD ["npm", "run", "start:dev"]
 
 # ---------------------------------------
@@ -33,9 +30,12 @@ CMD ["npm", "run", "start:dev"]
 # ---------------------------------------
 FROM base AS builder
 
+# Clean install for build stability
 RUN npm ci
+
 COPY . .
-RUN npx prisma generate
+
+# Build the NestJS app
 RUN npm run build
 
 # ---------------------------------------
@@ -47,11 +47,10 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Copy only necessary files from builder
+# Copy built assets and modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./
-COPY --from=builder /app/prisma ./prisma
 
 EXPOSE 3000
 
