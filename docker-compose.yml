@@ -33,7 +33,7 @@ services:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: ecommerce_db
     ports:
-      - "3306:3306"
+      - "3307:3306" # <--- (3307 on Mac -> 3306 inside Docker)
     volumes:
       - mysql_data:/var/lib/mysql
     # Healthcheck ensures DB is ready before API starts
