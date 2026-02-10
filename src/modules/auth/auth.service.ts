@@ -12,6 +12,7 @@ import { User } from '../users/entities/user.entity';
 import { RegisterInput } from './dto/register.input';
 import { LoginInput } from './dto/login.input';
 import { AuthResponse } from './dto/auth.response';
+import { AuditService } from '../audit/audit.service';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +21,7 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly auditService: AuditService,
   ) {}
 
   async register(input: RegisterInput): Promise<AuthResponse> {
@@ -68,6 +70,13 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid email or password');
     }
+
+    await this.auditService.log(
+      user,
+      'USER_LOGIN',
+      user.id,
+      'User logged in successfully',
+    );
 
     const { accessToken, refreshToken } = await this.generateTokens(
       user.id,

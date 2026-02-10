@@ -8,6 +8,18 @@ input AddToCartInput {
   userId: String
 }
 
+type AuditLog {
+  action: String!
+  createdAt: DateTime!
+  details: String
+  id: ID!
+  ipAddress: String!
+  resourceId: String
+  updatedAt: DateTime!
+  user: User
+  userId: String
+}
+
 type AuthResponse {
   accessToken: String!
   refreshToken: String!
@@ -186,6 +198,7 @@ type Promotion {
 }
 
 type Query {
+  auditLogs: [AuditLog!]!
   categories: [Category!]!
   healthCheck: String!
   myCart: Cart!

@@ -8,6 +8,8 @@ import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { CreateProductInput } from './dto/create-product.input';
 import { CategoriesService } from '../categories/categories.service';
+import { AuditService } from '../audit/audit.service';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class ProductsService {
@@ -15,9 +17,10 @@ export class ProductsService {
     @InjectRepository(Product)
     private productRepo: Repository<Product>,
     private categoriesService: CategoriesService,
+    private auditService: AuditService,
   ) {}
 
-  async create(input: CreateProductInput): Promise<Product> {
+  async create(input: CreateProductInput, user: User): Promise<Product> {
     // 1. Validate Category Exists
     const category = await this.categoriesService.findOne(input.categoryId);
     if (!category) throw new NotFoundException('Category not found');
@@ -35,8 +38,15 @@ export class ProductsService {
     const product = this.productRepo.create(input);
     const savedProduct = await this.productRepo.save(product);
 
+    // 4. LOG THE ACTION
+    await this.auditService.log(
+      user,
+      'CREATE_PRODUCT',
+      savedProduct.id,
+      `Created product: ${savedProduct.name} (${savedProduct.sku})`,
+    );
+
     // Manually attach the category object to the result
-    // so GraphQL can resolve the "category" field immediately.
     savedProduct.category = category;
 
     return savedProduct;
