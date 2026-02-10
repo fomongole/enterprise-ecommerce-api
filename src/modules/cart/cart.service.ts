@@ -9,6 +9,7 @@ import { Cart } from './entities/cart.entity';
 import { CartItem } from './entities/cart-item.entity';
 import { ProductsService } from '../products/products.service';
 import { AddToCartInput } from './dto/add-to-cart.input';
+import { PromotionsService } from '../promotions/promotions.service';
 
 @Injectable()
 export class CartService {
@@ -18,6 +19,7 @@ export class CartService {
     @InjectRepository(CartItem)
     private cartItemRepo: Repository<CartItem>,
     private productsService: ProductsService,
+    private promotionsService: PromotionsService,
   ) {}
 
   // 1. Get or Create Cart for a User
@@ -78,5 +80,28 @@ export class CartService {
     const cart = await this.getOrCreateCart(userId);
     await this.cartItemRepo.delete({ cartId: cart.id });
     return true;
+  }
+
+  async applyCoupon(userId: string, code: string): Promise<Cart> {
+    // 1. Validate the code
+    const promotion = await this.promotionsService.validateCode(code);
+
+    // 2. Get the cart
+    const cart = await this.getOrCreateCart(userId);
+
+    // 3. Apply discount
+    cart.couponCode = promotion.code;
+    cart.discountPercentage = promotion.discountPercentage;
+
+    // 4. Save and return
+    return this.cartRepo.save(cart);
+  }
+
+  // OPTIONAL: Method to remove coupon
+  async removeCoupon(userId: string): Promise<Cart> {
+    const cart = await this.getOrCreateCart(userId);
+    cart.couponCode = null;
+    cart.discountPercentage = 0;
+    return this.cartRepo.save(cart);
   }
 }

@@ -22,6 +22,8 @@ import { OrdersModule } from './modules/orders/orders.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { Review } from './modules/reviews/entities/review.entity';
 import { ReviewsModule } from './modules/reviews/reviews.module';
+import { PromotionsModule } from './modules/promotions/promotions.module';
+import { Promotion } from './modules/promotions/entities/promotion.entity';
 
 @Module({
   imports: [
@@ -48,6 +50,7 @@ import { ReviewsModule } from './modules/reviews/reviews.module';
           Order,
           OrderItem,
           Review,
+          Promotion,
         ],
         // Auto-create tables (True for Dev, False for Prod)
         synchronize: true,
@@ -79,6 +82,7 @@ import { ReviewsModule } from './modules/reviews/reviews.module';
     OrdersModule,
     PaymentsModule,
     ReviewsModule,
+    PromotionsModule,
   ],
   controllers: [],
   providers: [HealthResolver],

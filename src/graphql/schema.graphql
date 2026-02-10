@@ -15,7 +15,9 @@ type AuthResponse {
 }
 
 type Cart {
+  couponCode: String
   createdAt: DateTime!
+  discountPercentage: Int!
   grandTotal: Float!
   id: ID!
   items: [CartItem!]!
@@ -88,8 +90,10 @@ input LoginInput {
 
 type Mutation {
   addToCart(input: AddToCartInput!, userId: String!): Cart!
+  applyCoupon(code: String!, userId: String!): Cart!
   checkout(input: CreateOrderInput!, userId: String!): Order!
   createCategory(input: CreateCategoryInput!): Category!
+  createCoupon(code: String!, discountPercentage: Int!): Promotion!
   createPaymentIntent(orderId: String!): PaymentIntentResponse!
   createProduct(input: CreateProductInput!): Product!
   createReview(input: CreateReviewInput!, userId: String!): Review!
@@ -169,6 +173,16 @@ input ProductImageInput {
   altText: String
   isPrimary: Boolean! = false
   url: String!
+}
+
+type Promotion {
+  code: String!
+  createdAt: DateTime!
+  discountPercentage: Int!
+  expiryDate: DateTime!
+  id: ID!
+  isActive: Boolean!
+  updatedAt: DateTime!
 }
 
 type Query {
