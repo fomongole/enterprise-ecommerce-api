@@ -58,6 +58,9 @@ import { AuditLog } from './modules/audit/entities/audit-log.entity';
         // Auto-create tables (True for Dev, False for Prod)
         synchronize: true,
         logging: configService.get('NODE_ENV') === 'development',
+        ssl: {
+          rejectUnauthorized: true,
+        }
       }),
     }),
 
