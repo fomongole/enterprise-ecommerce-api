@@ -55,6 +55,10 @@ input CreateCategoryInput {
   slug: String!
 }
 
+input CreateOrderInput {
+  shippingAddress: String!
+}
+
 input CreateProductInput {
   categoryId: String!
   description: String!
@@ -78,10 +82,45 @@ input LoginInput {
 
 type Mutation {
   addToCart(input: AddToCartInput!, userId: String!): Cart!
+  checkout(input: CreateOrderInput!, userId: String!): Order!
   createCategory(input: CreateCategoryInput!): Category!
   createProduct(input: CreateProductInput!): Product!
   login(loginInput: LoginInput!): AuthResponse!
   register(registerInput: RegisterInput!): AuthResponse!
+}
+
+type Order {
+  createdAt: DateTime!
+  id: ID!
+  items: [OrderItem!]!
+  shippingAddress: String!
+  status: OrderStatus!
+  stripePaymentId: String
+  totalAmount: Float!
+  updatedAt: DateTime!
+  user: User!
+  userId: String!
+}
+
+type OrderItem {
+  createdAt: DateTime!
+  id: ID!
+  order: Order!
+  orderId: String!
+  price: Float!
+  product: Product
+  productId: String
+  productName: String!
+  quantity: Int!
+  updatedAt: DateTime!
+}
+
+enum OrderStatus {
+  CANCELLED
+  DELIVERED
+  PAID
+  PENDING
+  SHIPPED
 }
 
 type Product {
@@ -121,6 +160,7 @@ type Query {
   categories: [Category!]!
   healthCheck: String!
   myCart(userId: String!): Cart!
+  myOrders(userId: String!): [Order!]!
   product(id: String!): Product!
   products: [Product!]!
 }
@@ -141,6 +181,7 @@ type User {
   isActive: Boolean!
   lastLogin: DateTime
   lastName: String
+  orders: [Order!]
   role: UserRole!
   updatedAt: DateTime!
 }

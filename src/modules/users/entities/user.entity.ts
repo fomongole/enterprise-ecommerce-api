@@ -1,7 +1,8 @@
-import { Entity, Column, OneToOne } from 'typeorm';
+import { Entity, Column, OneToOne, OneToMany } from 'typeorm';
 import { ObjectType, Field, registerEnumType } from '@nestjs/graphql';
 import { BaseEntity } from '../../../common/entities/base.entity';
 import { Cart } from '../../cart/entities/cart.entity';
+import { Order } from '../../orders/entities/order.entity';
 
 export enum UserRole {
   USER = 'USER',
@@ -52,4 +53,8 @@ export class User extends BaseEntity {
   @Field(() => Cart, { nullable: true })
   @OneToOne(() => Cart, (cart) => cart.user)
   cart?: Cart;
+
+  @Field(() => [Order], { nullable: true })
+  @OneToMany(() => Order, (order) => order.user)
+  orders?: Order[];
 }

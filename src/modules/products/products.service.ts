@@ -54,4 +54,18 @@ export class ProductsService {
     if (!product) throw new NotFoundException(`Product #${id} not found`);
     return product;
   }
+
+  async decreaseStock(productId: string, quantity: number): Promise<void> {
+    const product = await this.productRepo.findOne({
+      where: { id: productId },
+    });
+    if (!product) throw new NotFoundException(`Product ${productId} not found`);
+
+    if (product.stock < quantity) {
+      throw new ConflictException(`Not enough stock for ${product.name}`);
+    }
+
+    product.stock -= quantity;
+    await this.productRepo.save(product);
+  }
 }
