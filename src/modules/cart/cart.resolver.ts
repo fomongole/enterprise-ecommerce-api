@@ -2,32 +2,31 @@ import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { Cart } from './entities/cart.entity';
 import { CartService } from './cart.service';
 import { AddToCartInput } from './dto/add-to-cart.input';
-// We'll use a simple guard to simulate getting the userId for now
-// we shall switch to use @CurrentUser() decorator
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { User } from '../users/entities/user.entity';
 
 @Resolver(() => Cart)
+@UseGuards(JwtAuthGuard) // <--- Apply to ENTIRE class (Must be logged in to touch cart)
 export class CartResolver {
   constructor(private readonly cartService: CartService) {}
 
   @Mutation(() => Cart)
   async addToCart(
     @Args('input') input: AddToCartInput,
-    // For now, we manually pass userId until we hook up Auth Guard
-    @Args('userId') userId: string,
+    @CurrentUser() user: User,
   ) {
-    return this.cartService.addToCart(userId, input);
+    return this.cartService.addToCart(user.id, input);
   }
 
   @Query(() => Cart, { name: 'myCart' })
-  async getCart(@Args('userId') userId: string) {
-    return this.cartService.getOrCreateCart(userId);
+  async getCart(@CurrentUser() user: User) {
+    return this.cartService.getOrCreateCart(user.id);
   }
 
   @Mutation(() => Cart)
-  async applyCoupon(
-    @Args('userId') userId: string,
-    @Args('code') code: string,
-  ) {
-    return this.cartService.applyCoupon(userId, code);
+  async applyCoupon(@CurrentUser() user: User, @Args('code') code: string) {
+    return this.cartService.applyCoupon(user.id, code);
   }
 }

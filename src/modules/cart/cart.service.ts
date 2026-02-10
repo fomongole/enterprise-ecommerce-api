@@ -78,7 +78,15 @@ export class CartService {
   // 3. Clear Cart (After checkout)
   async clearCart(userId: string): Promise<boolean> {
     const cart = await this.getOrCreateCart(userId);
+
+    // 1. Delete all items
     await this.cartItemRepo.delete({ cartId: cart.id });
+
+    // 2. Clear the coupon from the Cart entity
+    cart.couponCode = null;
+    cart.discountPercentage = 0;
+    await this.cartRepo.save(cart); // Save the clean cart
+
     return true;
   }
 

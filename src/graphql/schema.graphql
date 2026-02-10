@@ -89,14 +89,14 @@ input LoginInput {
 }
 
 type Mutation {
-  addToCart(input: AddToCartInput!, userId: String!): Cart!
-  applyCoupon(code: String!, userId: String!): Cart!
-  checkout(input: CreateOrderInput!, userId: String!): Order!
+  addToCart(input: AddToCartInput!): Cart!
+  applyCoupon(code: String!): Cart!
+  checkout(input: CreateOrderInput!): Order!
   createCategory(input: CreateCategoryInput!): Category!
   createCoupon(code: String!, discountPercentage: Int!): Promotion!
   createPaymentIntent(orderId: String!): PaymentIntentResponse!
   createProduct(input: CreateProductInput!): Product!
-  createReview(input: CreateReviewInput!, userId: String!): Review!
+  createReview(input: CreateReviewInput!): Review!
   login(loginInput: LoginInput!): AuthResponse!
   mockPaymentSuccess(orderId: String!): Boolean!
   register(registerInput: RegisterInput!): AuthResponse!
@@ -188,8 +188,8 @@ type Promotion {
 type Query {
   categories: [Category!]!
   healthCheck: String!
-  myCart(userId: String!): Cart!
-  myOrders(userId: String!): [Order!]!
+  myCart: Cart!
+  myOrders: [Order!]!
   product(id: String!): Product!
   productReviews(productId: String!): [Review!]!
   products: [Product!]!
