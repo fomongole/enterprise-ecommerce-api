@@ -84,8 +84,10 @@ type Mutation {
   addToCart(input: AddToCartInput!, userId: String!): Cart!
   checkout(input: CreateOrderInput!, userId: String!): Order!
   createCategory(input: CreateCategoryInput!): Category!
+  createPaymentIntent(orderId: String!): PaymentIntentResponse!
   createProduct(input: CreateProductInput!): Product!
   login(loginInput: LoginInput!): AuthResponse!
+  mockPaymentSuccess(orderId: String!): Boolean!
   register(registerInput: RegisterInput!): AuthResponse!
 }
 
@@ -121,6 +123,11 @@ enum OrderStatus {
   PAID
   PENDING
   SHIPPED
+}
+
+type PaymentIntentResponse {
+  clientSecret: String!
+  id: String!
 }
 
 type Product {

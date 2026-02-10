@@ -19,6 +19,7 @@ import { CartModule } from './modules/cart/cart.module';
 import { Order } from './modules/orders/entities/order.entity';
 import { OrderItem } from './modules/orders/entities/order-item.entity';
 import { OrdersModule } from './modules/orders/orders.module';
+import { PaymentsModule } from './modules/payments/payments.module';
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { OrdersModule } from './modules/orders/orders.module';
     ProductsModule,
     CartModule,
     OrdersModule,
+    PaymentsModule,
   ],
   controllers: [],
   providers: [HealthResolver],

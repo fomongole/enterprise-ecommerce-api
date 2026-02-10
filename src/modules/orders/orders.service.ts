@@ -85,6 +85,24 @@ export class OrdersService {
       order: { createdAt: 'DESC' },
     });
   }
+
+  // Helper to find one order
+  async findOne(id: string): Promise<Order | null> {
+    return this.orderRepo.findOne({ where: { id } });
+  }
+
+  // This is what happens when Payment Succeeds!
+  async markAsPaid(id: string): Promise<boolean> {
+    const order = await this.findOne(id);
+    if (!order) return false;
+
+    // Update status to PAID and set a fake payment ID
+    order.status = OrderStatus.PAID;
+    order.stripePaymentId = `pi_mock_${Date.now()}`;
+
+    await this.orderRepo.save(order);
+    return true;
+  }
 }
 
 /*
