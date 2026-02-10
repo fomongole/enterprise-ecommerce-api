@@ -24,6 +24,7 @@ import { Review } from './modules/reviews/entities/review.entity';
 import { ReviewsModule } from './modules/reviews/reviews.module';
 import { PromotionsModule } from './modules/promotions/promotions.module';
 import { Promotion } from './modules/promotions/entities/promotion.entity';
+import { UploadModule } from './modules/upload/upload.module';
 
 @Module({
   imports: [
@@ -39,7 +40,6 @@ import { Promotion } from './modules/promotions/entities/promotion.entity';
       useFactory: (configService: ConfigService) => ({
         type: 'mysql',
         url: configService.get<string>('DATABASE_URL'),
-        // Explicitly list entities so TypeORM finds them
         entities: [
           User,
           Category,
@@ -83,6 +83,7 @@ import { Promotion } from './modules/promotions/entities/promotion.entity';
     PaymentsModule,
     ReviewsModule,
     PromotionsModule,
+    UploadModule,
   ],
   controllers: [],
   providers: [HealthResolver],

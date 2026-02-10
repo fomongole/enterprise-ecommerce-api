@@ -5,21 +5,23 @@ import {
 } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
 import { Logger } from 'nestjs-pino';
+import multipart from '@fastify/multipart';
 
 async function bootstrap() {
-  // Use Fastify instead of Express
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter(),
   );
 
-  // Use Pino Logger
-  app.useLogger(app.get(Logger));
+  // 1. Register Multipart for File Uploads
+  await app.register(multipart);
 
-  // Enable CORS
+  // 2. Set Global Prefix to get /api/v1/...
+  app.setGlobalPrefix('api/v1');
+
+  app.useLogger(app.get(Logger));
   app.enableCors();
 
-  // 0.0.0.0 IS MANDATORY FOR DOCKER
   await app.listen(3000, '0.0.0.0');
 
   const logger = app.get(Logger);
