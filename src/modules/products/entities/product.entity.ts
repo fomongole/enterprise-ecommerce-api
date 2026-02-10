@@ -4,6 +4,7 @@ import { BaseEntity } from '../../../common/entities/base.entity';
 import { Category } from '../../categories/entities/category.entity';
 import { ProductImage } from './product-image.entity';
 import { CartItem } from 'src/modules/cart/entities/cart-item.entity';
+import { Review } from '../../reviews/entities/review.entity';
 
 @ObjectType()
 @Entity('products')
@@ -57,4 +58,8 @@ export class Product extends BaseEntity {
 
   @OneToMany(() => CartItem, (cartItem) => cartItem.product)
   cartItems: CartItem[];
+
+  @Field(() => [Review], { nullable: true })
+  @OneToMany(() => Review, (review) => review.product)
+  reviews: Review[];
 }

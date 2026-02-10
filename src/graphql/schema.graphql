@@ -70,6 +70,12 @@ input CreateProductInput {
   stock: Int!
 }
 
+input CreateReviewInput {
+  comment: String
+  productId: String!
+  rating: Int!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -86,6 +92,7 @@ type Mutation {
   createCategory(input: CreateCategoryInput!): Category!
   createPaymentIntent(orderId: String!): PaymentIntentResponse!
   createProduct(input: CreateProductInput!): Product!
+  createReview(input: CreateReviewInput!, userId: String!): Review!
   login(loginInput: LoginInput!): AuthResponse!
   mockPaymentSuccess(orderId: String!): Boolean!
   register(registerInput: RegisterInput!): AuthResponse!
@@ -140,6 +147,7 @@ type Product {
   isActive: Boolean!
   name: String!
   price: Float!
+  reviews: [Review!]
   sku: String!
   slug: String!
   stock: Int!
@@ -169,6 +177,7 @@ type Query {
   myCart(userId: String!): Cart!
   myOrders(userId: String!): [Order!]!
   product(id: String!): Product!
+  productReviews(productId: String!): [Review!]!
   products: [Product!]!
 }
 
@@ -177,6 +186,18 @@ input RegisterInput {
   firstName: String
   lastName: String
   password: String!
+}
+
+type Review {
+  comment: String
+  createdAt: DateTime!
+  id: ID!
+  product: Product!
+  productId: String!
+  rating: Int!
+  updatedAt: DateTime!
+  user: User!
+  userId: String!
 }
 
 type User {

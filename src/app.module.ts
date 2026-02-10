@@ -20,6 +20,8 @@ import { Order } from './modules/orders/entities/order.entity';
 import { OrderItem } from './modules/orders/entities/order-item.entity';
 import { OrdersModule } from './modules/orders/orders.module';
 import { PaymentsModule } from './modules/payments/payments.module';
+import { Review } from './modules/reviews/entities/review.entity';
+import { ReviewsModule } from './modules/reviews/reviews.module';
 
 @Module({
   imports: [
@@ -45,6 +47,7 @@ import { PaymentsModule } from './modules/payments/payments.module';
           CartItem,
           Order,
           OrderItem,
+          Review,
         ],
         // Auto-create tables (True for Dev, False for Prod)
         synchronize: true,
@@ -75,6 +78,7 @@ import { PaymentsModule } from './modules/payments/payments.module';
     CartModule,
     OrdersModule,
     PaymentsModule,
+    ReviewsModule,
   ],
   controllers: [],
   providers: [HealthResolver],
