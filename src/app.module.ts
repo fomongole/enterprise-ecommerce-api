@@ -8,6 +8,11 @@ import { join } from 'path';
 import { HealthResolver } from './graphql/resolvers/health.resolver';
 import { AuthModule } from './modules/auth/auth.module';
 import { User } from './modules/users/entities/user.entity';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { Category } from './modules/categories/entities/category.entity';
+import { Product } from './modules/products/entities/product.entity';
+import { ProductsModule } from './modules/products/products.module';
+import { ProductImage } from './modules/products/entities/product-image.entity';
 
 @Module({
   imports: [
@@ -24,7 +29,7 @@ import { User } from './modules/users/entities/user.entity';
         type: 'mysql',
         url: configService.get<string>('DATABASE_URL'),
         // Explicitly list entities so TypeORM finds them
-        entities: [User],
+        entities: [User, Category, Product, ProductImage],
         // Auto-create tables (True for Dev, False for Prod)
         synchronize: true,
         logging: configService.get('NODE_ENV') === 'development',
@@ -49,6 +54,8 @@ import { User } from './modules/users/entities/user.entity';
     }),
 
     AuthModule,
+    CategoriesModule,
+    ProductsModule,
   ],
   controllers: [],
   providers: [HealthResolver],

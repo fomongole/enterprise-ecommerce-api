@@ -65,6 +65,15 @@ services:
     depends_on:
       - redis
 
+    # 5. Database GUI (Adminer)
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+        - mysql
+
 volumes:
   mysql_data:
   redis_data:
