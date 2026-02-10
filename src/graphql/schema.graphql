@@ -2,10 +2,38 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input AddToCartInput {
+  productId: String!
+  quantity: Int!
+  userId: String
+}
+
 type AuthResponse {
   accessToken: String!
   refreshToken: String!
   user: User!
+}
+
+type Cart {
+  createdAt: DateTime!
+  grandTotal: Float!
+  id: ID!
+  items: [CartItem!]!
+  updatedAt: DateTime!
+  user: User
+  userId: String
+}
+
+type CartItem {
+  cart: Cart!
+  cartId: String!
+  createdAt: DateTime!
+  id: ID!
+  product: Product!
+  productId: String!
+  quantity: Int!
+  subTotal: Float!
+  updatedAt: DateTime!
 }
 
 type Category {
@@ -49,6 +77,7 @@ input LoginInput {
 }
 
 type Mutation {
+  addToCart(input: AddToCartInput!, userId: String!): Cart!
   createCategory(input: CreateCategoryInput!): Category!
   createProduct(input: CreateProductInput!): Product!
   login(loginInput: LoginInput!): AuthResponse!
@@ -91,6 +120,7 @@ input ProductImageInput {
 type Query {
   categories: [Category!]!
   healthCheck: String!
+  myCart(userId: String!): Cart!
   product(id: String!): Product!
   products: [Product!]!
 }
@@ -103,6 +133,7 @@ input RegisterInput {
 }
 
 type User {
+  cart: Cart
   createdAt: DateTime!
   email: String!
   firstName: String

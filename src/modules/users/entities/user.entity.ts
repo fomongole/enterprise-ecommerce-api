@@ -1,6 +1,7 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, OneToOne } from 'typeorm';
 import { ObjectType, Field, registerEnumType } from '@nestjs/graphql';
 import { BaseEntity } from '../../../common/entities/base.entity';
+import { Cart } from '../../cart/entities/cart.entity';
 
 export enum UserRole {
   USER = 'USER',
@@ -47,4 +48,8 @@ export class User extends BaseEntity {
   @Field({ nullable: true })
   @Column({ nullable: true })
   lastLogin?: Date;
+
+  @Field(() => Cart, { nullable: true })
+  @OneToOne(() => Cart, (cart) => cart.user)
+  cart?: Cart;
 }

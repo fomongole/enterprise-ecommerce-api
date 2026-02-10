@@ -3,6 +3,7 @@ import { ObjectType, Field, Float, Int } from '@nestjs/graphql';
 import { BaseEntity } from '../../../common/entities/base.entity';
 import { Category } from '../../categories/entities/category.entity';
 import { ProductImage } from './product-image.entity';
+import { CartItem } from 'src/modules/cart/entities/cart-item.entity';
 
 @ObjectType()
 @Entity('products')
@@ -53,4 +54,7 @@ export class Product extends BaseEntity {
   @Field(() => [ProductImage], { nullable: true })
   @OneToMany(() => ProductImage, (image) => image.product, { cascade: true }) // Cascade allows saving images WITH product
   images?: ProductImage[];
+
+  @OneToMany(() => CartItem, (cartItem) => cartItem.product)
+  cartItems: CartItem[];
 }

@@ -13,6 +13,9 @@ import { Category } from './modules/categories/entities/category.entity';
 import { Product } from './modules/products/entities/product.entity';
 import { ProductsModule } from './modules/products/products.module';
 import { ProductImage } from './modules/products/entities/product-image.entity';
+import { Cart } from './modules/cart/entities/cart.entity';
+import { CartItem } from './modules/cart/entities/cart-item.entity';
+import { CartModule } from './modules/cart/cart.module';
 
 @Module({
   imports: [
@@ -29,7 +32,7 @@ import { ProductImage } from './modules/products/entities/product-image.entity';
         type: 'mysql',
         url: configService.get<string>('DATABASE_URL'),
         // Explicitly list entities so TypeORM finds them
-        entities: [User, Category, Product, ProductImage],
+        entities: [User, Category, Product, ProductImage, Cart, CartItem],
         // Auto-create tables (True for Dev, False for Prod)
         synchronize: true,
         logging: configService.get('NODE_ENV') === 'development',
@@ -56,6 +59,7 @@ import { ProductImage } from './modules/products/entities/product-image.entity';
     AuthModule,
     CategoriesModule,
     ProductsModule,
+    CartModule,
   ],
   controllers: [],
   providers: [HealthResolver],
